@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: >-
+  An Amazon S3 trigger that retrieves metadata for the object that has been
+  updated.
+Parameters:
+  BucketNamePrefix:
+    Type: String
+    Default: pdf-processing
+Resources:
+  PdfProcessorFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: app.lambda_handler
+      Runtime: python3.8
+      CodeUri: .
+      Description: >-
+        An Amazon S3 trigger that retrieves metadata for the object that has
+        been updated.
+      MemorySize: 128
+      Timeout: 3
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Sub "${BucketNamePrefix}-raw-${AWS::AccountId}"
+        - S3CrudPolicy:
+            BucketName: !Sub "${BucketNamePrefix}-processed-${AWS::AccountId}"
+      Environment:
+        Variables:
+          RAW_BUCKET: !Sub "${BucketNamePrefix}-raw-${AWS::AccountId}"
+          PROCESSED_BUCKET: !Sub "${BucketNamePrefix}-processed-${AWS::AccountId}"
+      Events:
+        RawBucketEvent:
+          Type: S3
+          Properties:
+            Bucket: !Ref RawBucket
+            Events:
+              - 's3:ObjectCreated:*'
+  RawBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub "${BucketNamePrefix}-raw-${AWS::AccountId}"
+  ProcessedBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub "${BucketNamePrefix}-processed-${AWS::AccountId}"
+
+Outputs:
+  RawBucket:
+    Value: !Ref RawBucket
+  ProcessedBucket:
+    Value: !Ref ProcessedBucket
+  PdfFunction:
+    Value: !Ref PdfProcessorFunction

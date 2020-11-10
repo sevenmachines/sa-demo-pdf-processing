@@ -1,0 +1,10 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "sa-demo-pdf-processing"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-c9v70fijbrub"
+s3_prefix = "sa-demo-pdf-processing"
+region = "eu-west-1"
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "BucketNamePrefix=\"pdf-processing\""
