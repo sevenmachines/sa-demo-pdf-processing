@@ -9,8 +9,6 @@ This project contains source code and supporting files for a serverless applicat
 
 The application triggers a lambda function on upload of a PDF file to an S3 bucket with format <client_name>/<pdf_name>. The lambda function then demonstrates a PDF processing task, spliting the PDF, and outputing it into another S3 bucket. If the PDF is encrypted, the lambda will look for a client password in secrets manager of the format pdf-processing/<client_name> and use that to decrypt the PDF on-the-fly before processing.
 
-![architecture](D:\projects\sa-demo-pdf-processing\docs\architecture.png)
-
 If you prefer to use an integrated development environment (IDE) to build and test your application, you can use the AWS Toolkit.  
 The AWS Toolkit is an open source plug-in for popular IDEs that uses the SAM CLI to build and deploy serverless applications on AWS. The AWS Toolkit also adds a simplified step-through debugging experience for Lambda function code. See the following links to get started.
 
