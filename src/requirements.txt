@@ -1,1 +1,1 @@
-requests
+pypdf2

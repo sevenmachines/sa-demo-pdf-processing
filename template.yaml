@@ -13,7 +13,7 @@ Resources:
     Properties:
       Handler: app.lambda_handler
       Runtime: python3.8
-      CodeUri: .
+      CodeUri: src/
       Description: >-
         An Amazon S3 trigger that retrieves metadata for the object that has
         been updated.
@@ -24,10 +24,13 @@ Resources:
             BucketName: !Sub "${BucketNamePrefix}-raw-${AWS::AccountId}"
         - S3CrudPolicy:
             BucketName: !Sub "${BucketNamePrefix}-processed-${AWS::AccountId}"
+        - AWSSecretsManagerGetSecretValuePolicy:
+            SecretArn: !Sub "arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:pdf-processing:*"
       Environment:
         Variables:
           RAW_BUCKET: !Sub "${BucketNamePrefix}-raw-${AWS::AccountId}"
           PROCESSED_BUCKET: !Sub "${BucketNamePrefix}-processed-${AWS::AccountId}"
+          ENCRYPTION_KEY_BASE: pdf-processing
       Events:
         RawBucketEvent:
           Type: S3
